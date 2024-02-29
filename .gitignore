@@ -1,0 +1,19 @@
+# Ignore specific files and directories
+.git
+old_models/
+tmp/
+sin.png
+logfile.log*
+a.out
+nohup.out
+*.sh
+*.swp
+*.tar
+*.yml
+*.pyc
+Dockerfile
+*.h5
+*.pt
+fish_product_models/
+models/
+*.sav
