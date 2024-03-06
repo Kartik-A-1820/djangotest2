@@ -5,7 +5,7 @@ import cv2
 import logging
 
 
-model = None
+model = load_model(r"fish_product_models/best_model_f1_(mackerel).h5")
 target_size = (224, 224)
 threshold = 0.5 #0.478963
 
@@ -16,16 +16,6 @@ def process_image(image):
     return processed_image
 
 def predict_mackerel(image):
-    global model
-    if not model:
-        logging.info('LOADING MACKEREL MODEL!!!!!')
-        try:
-            model = load_model(r"/home/ec2-user/ML/fish_product_models/best_model_f1_(mackerel).h5")
-        except:
-            model = load_model(r"fish_product_models/best_model_f1_(mackerel).h5")
-
-        # model = load_model(r"C:\Users\KARTIK\Desktop\Mobile_APP\models\best_model_f1_(mackerel).h5")
-        # model = load_model(r"/home/ec2-user/fish_product_models/best_model_f1_(mackerel).h5")
     image = process_image(image)
     pred = model.predict(image, verbose=0)
     print(pred[0][0])

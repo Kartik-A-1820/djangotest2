@@ -4,7 +4,7 @@ from keras.models import load_model
 import cv2
 import logging
 
-model = None
+model = load_model(r"fish_product_models/wp2.h5")
 
 target_size = (224, 224)
 threshold = 0.5
@@ -15,16 +15,7 @@ def process_image(image):
     processed_image = tf.expand_dims(processed_image, axis=0)
     return processed_image
 
-def predict_prawn(image):
-    global model
-    if not model:
-        logging.info('LOADING MACKEREL MODEL!!!!!')
-        try:
-            model = load_model(r"/home/ec2-user/ML/fish_product_models/wp2.h5")
-        except:
-            model = load_model(r"fish_product_models/wp2.h5")
-        # model = load_model(r"C:\Users\KARTIK\Desktop\Mobile_APP\models\wp.h5")
-        # model = load_model(r"/home/ec2-user/fish_product_models/wp2.h5")   
+def predict_prawn(image): 
     image = process_image(image)
     pred = model.predict(image, verbose=0)
     print(pred[0][0])

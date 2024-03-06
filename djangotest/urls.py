@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from djangotestapp.views import *
-from authentication.views import LoginView
+from authentication.views import LoginView, SignupView, OTPVerificationView, UserDeleteView
 from djangotestapp.sapviews import postDataSapView
 # Change FOR DL/ML in the urlpatterns
 
@@ -26,6 +26,9 @@ urlpatterns = [
     path('data/',sendData,name='sendData'),
     path('post/',postDataView.as_view(),name='postData'), # For DL
     path('auth/login/', LoginView.as_view(), name='Login'),
+    path('auth/signup/', SignupView.as_view(), name='signup'),
+    path('auth/verify/', OTPVerificationView.as_view(), name='verify'),
+    path('auth/delete/', UserDeleteView.as_view(), name='delete'),
     path('sap/', postDataSapView.as_view(), name='postDataSap'),
     path('feedback/',resultsFeedback.as_view(), name='feedback'),
 ]

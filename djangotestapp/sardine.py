@@ -35,7 +35,7 @@ custom_metrics = {'recall_1':recall, 'precision_0':precision}
 # model_filepath = r"C:\Users\KARTIK\Desktop\Mobile_APP\models\sardine.h5"
 model_filepath = r"/home/ec2-user/DJANGOTEST/fish_product_models/sardine.h5"
 
-model = None
+model = load_model(r"fish_product_models/sardine.h5", custom_objects=custom_metrics)
 
 def preprocess_img(image, target_size=(280, 180)):
     if image is not None:
@@ -49,14 +49,6 @@ def preprocess_img(image, target_size=(280, 180)):
     return image
 
 def predict_sardine(img):
-    global model
-    if not model:
-        logging.info('LOADING SARDINE MODEL!!!!!')
-        try:
-            model = load_model(r"/home/ec2-user/ML/fish_product_models/sardine.h5", custom_objects=custom_metrics)
-        except:
-            model = load_model(r"fish_product_models/sardine.h5", custom_objects=custom_metrics)
-        # model_filepath = r"/home/ec2-user/fish_product_models/sardine.h5"
     target_size=(280, 180)
     label_map = {'Bad': 0, 'Good': 1}
     preprocessed_img = preprocess_img(img, target_size)

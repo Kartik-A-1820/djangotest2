@@ -7,9 +7,9 @@ import base64
 from ultralytics import YOLO
 from . import Species_Classification, sardine, mackerel, prawns
 import logging
-yolo = None
-prawn = None
-cut = None
+yolo = YOLO(r'fish_product_models/best.pt')
+prawn = YOLO(r'fish_product_models/prawn.pt')
+cut = YOLO(r'fish_product_models/cut3.pt')
 
 def extract_single_image_segment2(img, mask_segment, shape):
     height, width = shape[0], shape[1]
@@ -69,15 +69,6 @@ def process_image2(image, size=(640, 640)): # for eye model
 
 
 def is_cut(image):
-    global cut
-    if not cut:
-      logging.info('LOADING DAMAGE MODEL!!!!!')
-      try:
-         cut = YOLO(r'/home/ec2-user/ML/fish_product_models/cut3.pt')
-      except:
-         cut = YOLO(r'fish_product_models/cut3.pt')
-      # cut = YOLO(r'C:\Users\KARTIK\Desktop\Mobile_APP\models\cut3.pt')
-      # cut = YOLO(r'/home/ec2-user/fish_product_models/cut3.pt')
     img = image[:,:,::-1]
     res = cut.predict(img, conf=0.75)
     if len(res[0].boxes.xyxy) == 0:
@@ -160,28 +151,9 @@ def final_prediction(image, species, model):
   shape = image.shape
   try:
       if model.lower() == 'fish':
-         global yolo
-         if not yolo:
-            logging.info('LOADING FISH DETECTION MODEL!!!!')
-            try:
-               yolo = YOLO(r'/home/ec2-user/ML/fish_product_models/best.pt')
-            except:
-               yolo = YOLO(r'fish_product_models/best.pt')
-            # yolo = YOLO(r'C:\Users\KARTIK\Desktop\Mobile_APP\models\best.pt')
-            # yolo = YOLO(r'/home/ec2-user/fish_product_models/best.pt')
          pred = yolo.predict(image[:,:,::-1], conf=0.75)
       else:
-         global prawn
-         if not prawn:
-            logging.info('LOADING PRAWN DETECTION MODEL!!!!')
-            try:
-               prawn = YOLO(r'/home/ec2-user/ML/fish_product_models/nano_prawn.pt')
-            except:
-               prawn = YOLO(r'fish_product_models/prawn.pt')
-            # prawn = YOLO(r'C:\Users\KARTIK\Desktop\Mobile_APP\models\prawn.pt')
-            # prawn = YOLO(r'/home/ec2-user/fish_product_models/prawn.pt')
          pred = prawn.predict(image[:,:,::-1], conf=0.5)
-        
   except:
      return None
 
