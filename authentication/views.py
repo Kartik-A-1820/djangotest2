@@ -37,6 +37,9 @@ class SignupView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
+        email = serializer.validated_data.get('email')
+        if User.objects.filter(email=email).exists():
+            return Response({'message': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
         # Generate OTP
         otp = ''.join([str(random.randint(0, 9)) for _ in range(6)])
 
@@ -50,10 +53,10 @@ class SignupView(generics.GenericAPIView):
         # Send OTP
         if serializer_data.get('phone_number'):
             self.send_otp_sms(serializer_data['phone_number'], otp)
-            return Response({'message': f'Signup Success. Please verify your phone:{serializer_data["phone_number"]} with OTP'}, status=status.HTTP_201_CREATED)
+            return Response({'message': f'OTP sent. Please verify your phone:{serializer_data["phone_number"]} with OTP'}, status=status.HTTP_201_CREATED)
         self.send_otp(serializer_data['email'], otp)
 
-        return Response({'message': 'Signup Success. Please verify your email/phone with OTP', 'otp': otp, 'serializer_data': serializer_data}, status=status.HTTP_201_CREATED)
+        return Response({'message': 'OTP sent. Please verify your email/phone with OTP to complete signup!', 'otp': otp, 'serializer_data': serializer_data}, status=status.HTTP_201_CREATED)
 
     def create_otp(self, user, otp):
         OTP.objects.create(user=user, otp=otp)
